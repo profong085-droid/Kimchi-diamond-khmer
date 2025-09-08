@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <title>Kimchi Diamond – Top-Up Games</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #ff0066;
+      --secondary-color: #ff6699;
+      --dark-bg: #1a1a1a;
+      --card-bg: #252525;
+      --text-light: #f8f9fa;
+      --text-muted: #adb5bd;
+      --success-color: #28a745;
+    }
+    
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI','Kantumruy',Arial,sans-serif;background:var(--dark-bg);color:var(--text-light);display:flex;flex-direction:column;min-height:100vh;text-align:center}
+    a{color:var(--primary-color);text-decoration:none;transition:color 0.3s}
+    a:hover{color:var(--secondary-color)}
+    
+    /* Header Styles */
+    header{background:linear-gradient(135deg, var(--primary-color) 0%, #c40233 100%);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
+    header .logo{height:60px;width:60px;object-fit:cover;border-radius:50%;border:3px solid white}
+    header h1{font-size:2.2rem;margin:0;text-shadow:1px 1px 3px rgba(0,0,0,0.3)}
+    header p{font-size:1rem;opacity:.9}
+    
+    /* Navigation */
+    .nav-container {background:rgba(0,0,0,0.2);width:100%;padding:10px 0;margin-top:10px}
+    .nav-menu {display:flex;justify-content:center;list-style:none;gap:20px}
+    .nav-menu li a {color:white;padding:8px 15px;border-radius:20px;transition:background 0.3s}
+    .nav-menu li a:hover, .nav-menu li a.active {background:rgba(255,255,255,0.2)}
+    
+    /* Big banner 300×200 above small banners */
+    .big-banner img{width:100%;max-width:400px;height:auto;border-radius:10px;margin:20px auto;display:block;object-fit:cover;box-shadow:0 4px 15px rgba(0,0,0,.4)}
+    
+    /* 2 small banners 120×120 + labels below */
+    .banners{display:flex;justify-content:center;gap:20px;margin:10px 0 30px;flex-wrap:wrap}
+    .banners .banner-card{cursor:pointer;transition:transform .3s;text-align:center;background:var(--card-bg);padding:15px;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,0.2)}
+    .banners .banner-card:hover{transform:translateY(-5px);box-shadow:0 8px 16px rgba(0,0,0,0.3)}
+    .banners img{width:120px;height:120px;border-radius:8px;object-fit:cover;border:2px solid var(--primary-color)}
+    .banners .banner-label{font-size:.9rem;margin-top:10px;font-weight:bold}
+    
+    /* Features Section */
+    .features {display:flex;justify-content:center;gap:20px;margin:30px 0;flex-wrap:wrap}
+    .feature-item {background:var(--card-bg);padding:20px;border-radius:10px;width:180px;box-shadow:0 4px 8px rgba(0,0,0,0.1)}
+    .feature-item i {font-size:2rem;color:var(--primary-color);margin-bottom:15px}
+    .feature-item h3 {font-size:1rem;margin-bottom:10px}
+    
+    /* Contact section on home */
+    .contact-home{margin:30px 0;font-size:.95rem;line-height:1.8;background:var(--card-bg);padding:20px;border-radius:10px;max-width:600px;margin-left:auto;margin-right:auto}
+    .contact-home strong{display:block;margin-bottom:15px;font-size:1.05rem;color:var(--primary-color)}
+    .contact-home a{margin:0 8px;font-size:1.1rem}
+    
+    /* Pages */
+    .page{display:none;animation:fadeIn 0.5s ease}
+    .page.active{display:block}
+    @keyframes fadeIn {
+      from {opacity:0; transform:translateY(10px)}
+      to {opacity:1; transform:translateY(0)}
+    }
+    
+    .menu{padding:0 20px 40px;max-width:1200px;margin:0 auto}
+    .menu h2{margin:20px 0 30px;font-size:1.8rem;color:var(--primary-color);display:flex;align-items:center;justify-content:center;gap:10px}
+    
+    .cards{display:flex;flex-wrap:wrap;justify-content:center;gap:20px}
+    .card{background:var(--card-bg);border-radius:12px;width:160px;padding:20px;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 15px rgba(0,0,0,.4);transition:transform .2s;border:1px solid rgba(255,255,255,0.1)}
+    .card:hover{transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,0,0,0.4)}
+    .card span:first-of-type{font-size:1.4rem;font-weight:700;margin-bottom:8px;color:var(--primary-color)}
+    .card span:last-of-type{font-size:1rem;margin-bottom:12px;opacity:.9}
+    button{background:var(--primary-color);border:none;color:#fff;padding:10px 18px;border-radius:6px;cursor:pointer;font-size:1rem;transition:background .2s;font-weight:bold}
+    button:hover{background:var(--secondary-color)}
+    
+    /* Form styles */
+    .form-section{display:none;padding:30px 20px;background:var(--card-bg);border-radius:10px;max-width:500px;margin:20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+    .form-section h2{margin-bottom:20px;color:var(--primary-color);display:flex;align-items:center;justify-content:center;gap:10px}
+    .input-group {margin-bottom:15px;text-align:left}
+    .input-group label {display:block;margin-bottom:5px;font-weight:bold}
+    input{width:100%;margin:8px auto;padding:12px;border:1px solid rgba(255,255,255,0.2);background:rgba(0,0,0,0.2);color:white;border-radius:6px;font-size:1rem}
+    input:focus {outline:none;border-color:var(--primary-color)}
+    
+    /* QR ABA Banner 200×200 below diamond box */
+    .qr-banner{margin:20px auto;text-align:center;background:var(--card-bg);padding:20px;border-radius:10px;max-width:300px}
+    .qr-banner img{width:200px;height:200px;border-radius:10px;object-fit:cover;box-shadow:0 4px 10px rgba(0,0,0,.4);border:2px solid white}
+    .payment-info {margin-top:15px;font-size:0.9rem}
+    
+    /* Order Summary */
+    .order-summary {background:var(--card-bg);padding:15px;border-radius:10px;margin:15px 0;text-align:left}
+    .order-summary h3 {margin-bottom:10px;color:var(--primary-color)}
+    
+    /* Image Upload Section */
+    .image-upload {margin:30px auto;max-width:600px;background:var(--card-bg);padding:20px;border-radius:10px}
+    .image-upload h2 {color:var(--primary-color);margin-bottom:20px}
+    .upload-area {border:2px dashed var(--primary-color);border-radius:10px;padding:30px;text-align:center;margin-bottom:20px;cursor:pointer}
+    .upload-area i {font-size:3rem;color:var(--primary-color);margin-bottom:15px}
+    .upload-area p {margin-bottom:10px}
+    .upload-area:hover {background:rgba(255,0,102,0.1)}
+    #image-preview {max-width:100%;margin-top:20px;display:none;border-radius:10px}
+    
+    /* Footer */
+    footer{margin-top:auto;padding:30px 20px;font-size:.9rem;opacity:.7;background:rgba(0,0,0,0.3)}
+    .footer-links {display:flex;justify-content:center;gap:15px;margin-bottom:10px}
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header h1 {font-size:1.8rem}
+      .nav-menu {flex-wrap:wrap;gap:10px}
+      .nav-menu li a {font-size:0.9rem;padding:6px 12px}
+      .card {width:140px}
+      .feature-item {width:150px;padding:15px}
+    }
+    
+    @media (max-width: 480px) {
+      header .logo {height:50px;width:50px}
+      header h1 {font-size:1.5rem}
+      .banners .banner-card {padding:10px}
+      .banners img {width:100px;height:100px}
+      .card {width:130px;padding:15px 10px}
+      .feature-item {width:100%}
+    }
+  </style>
+</head>
+<body>
+  <!-- HOME PAGE -->
+  <div id="home" class="page active">
+    <header>
+      <img src="photo_2024-01-30_18-12-45-removebg-preview.png" alt="Kimchi Diamond" class="logo">
+      <h1>Kimchi Diamond</h1>
+      <p>ទិញពេជ្រ Mobile Legends & Free Fire ឆាប់ ៥-១៥ នាទី</p>
+      
+      <div class="nav-container">
+        <ul class="nav-menu">
+          <li><a href="#" class="active" onclick="showPage('home')"><i class="fas fa-home"></i> ទំព័រដើម</a></li>
+          <li><a href="#" onclick="showPage('ml')"><i class="fas fa-gamepad"></i> Mobile Legends</a></li>
+          <li><a href="#" onclick="showPage('ff')"><i class="fas fa-fire"></i> Free Fire</a></li>
+          <li><a href="#" onclick="showPage('upload')"><i class="fas fa-images"></i> បន្ថែមរូប</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <!-- Big banner 300×200 above small banners -->
+    <div class="big-banner">
+      <img src="d:\picture\Firefly-20240909151607.jpg" alt="Kimchi Diamond Big Banner">
+    </div>
+
+    <!-- Features Section -->
+    <div class="features">
+      <div class="feature-item">
+        <i class="fas fa-bolt"></i>
+        <h3>ការផ្គត់ផ្គង់រហ័ស</h3>
+        <p>៥-១៥ នាទី</p>
+      </div>
+      <div class="feature-item">
+        <i class="fas fa-shield-alt"></i>
+        <h3>សុវត្ថិភាព</h3>
+        <p>ធានាដោយអ្នកជំនាញ</p>
+      </div>
+      <div class="feature-item">
+        <i class="fas fa-headset"></i>
+        <h3>គាំទ្រឥតឈប់ឈរ</h3>
+        <p>២៤/៧</p>
+      </div>
+    </div>
+
+    <!-- 2 small banners 120×120 + labels below -->
+    <div class="banners">
+      <div class="banner-card" onclick="showPage('ml')">
+        <img src="unnamed.png" alt="Mobile Legends">
+        <div class="banner-label">Mobile Legends</div>
+      </div>
+      <div class="banner-card" onclick="showPage('ff')">
+        <img src="free-fire-thumbnail.png" alt="Free Fire">
+        <div class="banner-label">Free Fire</div>
+      </div>
+    </div>
+
+    <!-- CONTACT INFO ON HOME -->
+    <div class="contact-home">
+      <strong>ពេលមានបញ្ហាទាក់ទង:</strong><br>
+      <a href="https://www.facebook.com/share/19hZursgN5" target="_blank"><i class="fab fa-facebook"></i> Facebook</a> |
+      <a href="tel:0979450831"><i class="fas fa-phone"></i> 0979450831</a> |
+      <a href="https://t.me/0979450831" target="_blank"><i class="fab fa-telegram"></i> Telegram</a> |
+      <a href="https://wa.me/855979450831" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+    </div>
+
+    <footer>
+      <div class="footer-links">
+        <a href="#" onclick="showPage('payment')">វិធីសាស្ត្រទូទាត់</a> | 
+        <a href="#" onclick="showPage('faq')">សំណួរដែលសួរញឹកញាប់</a> | 
+        <a href="#" onclick="showPage('about')">អំពីពួកយើង</a>
+      </div>
+      <p>© 2023 Kimchi Diamond. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- UPLOAD IMAGE PAGE -->
+  <div id="upload" class="page">
+    <header>
+      <img src="photo_2024-01-30_18-12-45-removebg-preview.png" alt="Kimchi Diamond" class="logo">
+      <h1>បន្ថែមរូបភាព</h1>
+      <p>ផ្ញើរូបភាពសម្រាប់គេហទំព័រ Kimchi Diamond</p>
+      
+      <div class="nav-container">
+        <ul class="nav-menu">
+          <li><a href="#" onclick="showPage('home')"><i class="fas fa-home"></i> ទំព័រដើម</a></li>
+          <li><a href="#" onclick="showPage('ml')"><i class="fas fa-gamepad"></i> Mobile Legends</a></li>
+          <li><a href="#" onclick="showPage('ff')"><i class="fas fa-fire"></i> Free Fire</a></li>
+          <li><a href="#" class="active" onclick="showPage('upload')"><i class="fas fa-images"></i> បន្ថែមរូប</a></li>
+        </ul>
+      </div>
+    </header>
+    
+    <section class="image-upload">
+      <h2><i class="fas fa-upload"></i> ផ្ញើរូបភាព</h2>
+      
+      <div class="upload-area" id="drop-area">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p>អូសរូបភាពមកទីនេះ ឬចុចដើម្បីជ្រើសរើស</p>
+        <span>ឯកសារដែលគាំទ្រ: JPG, PNG, GIF - ទំហំអតិបរមា 5MB</span>
+        <input type="file" id="file-input" accept="image/*" style="display:none">
+      </div>
+      
+      <img id="image-preview" alt="Image preview">
+      
+      <div class="input-group">
+        <label for="image-title">ចំណងជើងរូបភាព</label>
+        <input type="text" id="image-title" placeholder="បញ្ចូលចំណងជើងរូបភាព">
+      </div>
+      
+      <div class="input-group">
+        <label for="image-description">ការពិពណ៌នា</label>
+        <input type="text" id="image-description" placeholder="បញ្ចូលការពិពណ៌នារូបភាព">
+      </div>
+      
+      <button onclick="uploadImage()"><i class="fas fa-paper-plane"></i> ផ្ញើរូបភាព</button>
+    </section>
+    
+    <footer>
+      <div class="footer-links">
+        <a href="#" onclick="showPage('payment')">វិធីសាស្ត្រទូទាត់</a> | 
+        <a href="#" onclick="showPage('faq')">សំណួរដែលសួរញឹកញាប់</a> | 
+        <a href="#" onclick="showPage('about')">អំពីពួកយើង</a>
+      </div>
+      <p>© 2023 Kimchi Diamond. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- MOBILE LEGENDS PAGE -->
+  <div id="ml" class="page">
+    <header>
+      <img src="photo_2024-01-30_18-12-45-removebg-preview.png" alt="Kimchi Diamond" class="logo">
+      <h1>Mobile Legends</h1>
+      <p>ទិញពេជ្រ Mobile Legends ឆាប់ ៥-១៥ នាទី</p>
+      
+      <div class="nav-container">
+        <ul class="nav-menu">
+          <li><a href="#" onclick="showPage('home')"><i class="fas fa-home"></i> ទំព័រដើម</a></li>
+          <li><a href="#" class="active" onclick="showPage('ml')"><i class="fas fa-gamepad"></i> Mobile Legends</a></li>
+          <li><a href="#" onclick="showPage('ff')"><i class="fas fa-fire"></i> Free Fire</a></li>
+          <li><a href="#" onclick="showPage('upload')"><i class="fas fa-images"></i> បន្ថែមរូប</a></li>
+        </ul>
+      </div>
+    </header>
+    
+    <section class="menu">
+      <h2><i class="fas fa-list-alt"></i> តារាងតម្លៃ</h2>
+      <div class="cards">
+        <div class="card"><span>5 💎</span><span>$ 0.05</span><button onclick="oML(5,0.05)">ទិញ</button></div>
+        <div class="card"><span>11 💎</span><span>$ 0.11</span><button onclick="oML(11,0.11)">ទិញ</button></div>
+        <div class="card"><span>23 💎</span><span>$ 0.23</span><button onclick="oML(23,0.23)">ទិញ</button></div>
+        <div class="card"><span>50 💎</span><span>$ 0.49</span><button onclick="oML(50,0.49)">ទិញ</button></div>
+        <div class="card"><span>75 💎</span><span>$ 0.73</span><button onclick="oML(75,0.73)">ទិញ</button></div>
+        <div class="card"><span>101 💎</span><span>$ 0.98</span><button onclick="oML(101,0.98)">ទិញ</button></div>
+        <div class="card"><span>150 💎</span><span>$ 1.46</span><button onclick="oML(150,1.46)">ទិញ</button></div>
+        <div class="card"><span>200 💎</span><span>$ 1.95</span><button onclick="oML(200,1.95)">ទិញ</button></div>
+        <div class="card"><span>250 💎</span><span>$ 2.44</span><button onclick="oML(250,2.44)">ទិញ</button></div>
+        <div class="card"><span>300 💎</span><span>$ 2.93</span><button onclick="oML(300,2.93)">ទិញ</button></div>
+        <div class="card"><span>400 💎</span><span>$ 3.90</span><button onclick="oML(400,3.90)">ទិញ</button></div>
+        <div class="card"><span>500 💎</span><span>$ 4.88</span><button onclick="oML(500,4.88)">ទិញ</button></div>
+        <div class="card"><span>700 💎</span><span>$ 6.83</span><button onclick="oML(700,6.83)">ទិញ</button></div>
+        <div class="card"><span>1000 💎</span><span>$ 9.76</span><button onclick="oML(1000,9.76)">ទិញ</button></div>
+        <div class="card"><span>1500 💎</span><span>$ 14.63</span><button onclick="oML(1500,14.63)">ទិញ</button></div>
+        <div class="card"><span>2000 💎</span><span>$ 19.51</span><button onclick="oML(2000,19.51)">ទិញ</button></div>
+        <div class="card"><span>2500 💎</span><span>$ 24.39</span><button onclick="oML(2500,24.39)">ទិញ</button></div>
+        <div class="card"><span>3000 💎</span><span>$ 29.27</span><button onclick="oML(3000,29.27)">ទិញ</button></div>
+        <div class="card"><span>4000 💎</span><span>$ 39.02</span><button onclick="oML(4000,39.02)">ទិញ</button></div>
+        <div class="card"><span>6000 💎</span><span>$ 58.54</span><button onclick="oML(6000,58.54)">ទិញ</button></div>
+        <div class="card"><span>8000 💎</span><span>$ 78.05</span><button onclick="oML(8000,78.05)">ទិញ</button></div>
+        <div class="card"><span>10000 💎</span><span>$ 97.56</span><button onclick="oML(10000,97.56)">ទិញ</button></div>
+      </div>
+    </section>
+    
+    <!-- QR ABA Banner 200×200 below diamond box -->
+    <div class="qr-banner">
+      <img src="photo_2025-09-08_12-24-17.jpg" alt="QR ABA">
+      <div class="payment-info">
+        <p>វិធីសាស្ត្រទូទាត់តាមរយៈ ABA</p>
+        <p>ឈ្មោះគណនី: PHO CHAIFONG </p>
+        <p>លេខគណនី: 004 378149 </p>
+      </div>
+    </div>
+    
+    <section class="form-section" id="f-ml">
+      <h2><i class="fas fa-shopping-cart"></i> បញ្ជាទិញ Mobile Legends</h2>
+      
+      <div class="order-summary">
+        <h3>កញ្ចប់ដែលបានជ្រើសរើស</h3>
+        <p id="ml-package">ពេជ្រ: <span id="ml-diamonds">0</span> | តម្លៃ: $<span id="ml-price">0.00</span></p>
+      </div>
+      
+      <div class="input-group">
+        <label for="g-ml">Game ID</label>
+        <input id="g-ml" placeholder="លេខ ID ហ្គេមរបស់អ្នក">
+      </div>
+      
+      <div class="input-group">
+        <label for="s-ml">Server ID</label>
+        <input id="s-ml" placeholder="លេខ Server ID">
+      </div>
+      
+      <div class="input-group">
+        <label for="r-ml">ABA Reference Number</label>
+        <input id="r-ml" placeholder="លេខយោង ABA">
+      </div>
+      
+      <button onclick="subML()"><i class="fas fa-paper-plane"></i> បញ្ជាទិញឥឡូវ</button>
+    </section>
+    
+    <footer>
+      <div class="footer-links">
+        <a href="#" onclick="showPage('payment')">វិធីសាស្ត្រទូទាត់</a> | 
+        <a href="#" onclick="showPage('faq')">សំណួរដែលសួរញឹកញាប់</a> | 
+        <a href="#" onclick="showPage('about')">អំពីពួកយើង</a>
+      </div>
+      <p>© 2023 Kimchi Diamond. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- FREE FIRE PAGE -->
+  <div id="ff" class="page">
+    <header>
+      <img src="photo_2024-01-30_18-12-45-removebg-preview.png" alt="Kimchi Diamond" class="logo">
+      <h1>Free Fire</h1>
+      <p>ទិញពេជ្រ Free Fire ឆាប់ ៥-១៥ នាទី</p>
+      
+      <div class="nav-container">
+        <ul class="nav-menu">
+          <li><a href="#" onclick="showPage('home')"><i class="fas fa-home"></i> ទំព័រដើម</a></li>
+          <li><a href="#" onclick="showPage('ml')"><i class="fas fa-gamepad"></i> Mobile Legends</a></li>
+          <li><a href="#" class="active" onclick="showPage('ff')"><i class="fas fa-fire"></i> Free Fire</a></li>
+          <li><a href="#" onclick="showPage('upload')"><i class="fas fa-images"></i> បន្ថែមរូប</a></li>
+        </ul>
+      </div>
+    </header>
+    
+    <section class="menu">
+      <h2><i class="fas fa-list-alt"></i> តារាងតម្លៃ</h2>
+      <div class="cards">
+        <!-- 1$ = 110 diamonds -->
+        <div class="card"><span>110 💎</span><span>$ 1.00</span><button onclick="oFF(110,1.00)">ទិញ</button></div>
+        <div class="card"><span>330 💎</span><span>$ 3.00</span><button onclick="oFF(330,3.00)">ទិញ</button></div>
+        <div class="card"><span>770 💎</span><span>$ 7.00</span><button onclick="oFF(770,7.00)">ទិញ</button></div>
+        <div class="card"><span>1100 💎</span><span>$ 10.00</span><button onclick="oFF(1100,10.00)">ទិញ</button></div>
+        <div class="card"><span>2200 💎</span><span>$ 20.00</span><button onclick="oFF(2200,20.00)">ទិញ</button></div>
+        <div class="card"><span>3190 💎</span><span>$ 29.00</span><button onclick="oFF(3190,29.00)">ទិញ</button></div>
+        <div class="card"><span>4180 💎</span><span>$ 38.00</span><button onclick="oFF(4180,38.00)">ទិញ</button></div>
+        <div class="card"><span>5500 💎</span><span>$ 50.00</span><button onclick="oFF(5500,50.00)">ទិញ</button></div>
+        <div class="card"><span>7700 💎</span><span>$ 70.00</span><button onclick="oFF(7700,70.00)">ទិញ</button></div>
+        <div class="card"><span>11000 💎</span><span>$ 100.00</span><button onclick="oFF(11000,100.00)">ទិញ</button></div>
+        <div class="card"><span>22000 💎</span><span>$ 200.00</span><button onclick="oFF(22000,200.00)">ទិញ</button></div>
+        <div class="card"><span>55000 💎</span><span>$ 500.00</span><button onclick="oFF(55000,500.00)">ទិញ</button></div>
+        <div class="card"><span>88000 💎</span><span>$ 800.00</span><button onclick="oFF(88000,800.00)">ទិញ</button></div>
+        <div class="card"><span>132000 💎</span><span>$ 1200.00</span><button onclick="oFF(132000,1200.00)">ទិញ</button></div>
+        <div class="card"><span>220000 💎</span><span>$ 2000.00</span><button onclick="oFF(220000,2000.00)">ទិញ</button></div>
+        <div class="card"><span>550000 💎</span><span>$ 5000.00</span><button onclick="oFF(550000,5000.00)">ទិញ</button></div>
+      </div>
+    </section>
+    
+    <!-- QR ABA Banner 200×200 below diamond box -->
+    <div class="qr-banner">
+      <img src="photo_2025-09-08_12-24-17.jpg" alt="QR ABA">
+      <div class="payment-info">
+        <p>វិធីសាស្ត្រទូទាត់តាមរយៈ ABA</p>
+        <p>ឈ្មោះគណនី: PHO CHAIFONG </p>
+        <p>លេខគណនី: 004378149 </p>
+      </div>
+    </div>
+    
+    <section class="form-section" id="f-ff">
+      <h2><i class="fas fa-shopping-cart"></i> បញ្ជាទិញ Free Fire</h2>
+      
+      <div class="order-summary">
+        <h3>កញ្ចប់ដែលបានជ្រើសរើស</h3>
+        <p id="ff-package">ពេជ្រ: <span id="ff-diamonds">0</span> | តម្លៃ: $<span id="ff-price">0.00</span></p>
+      </div>
+      
+      <div class="input-group">
+        <label for="g-ff">Free Fire ID</label>
+        <input id="g-ff" placeholder="លេខ ID Free Fire របស់អ្នក">
+      </div>
+      
+      <div class="input-group">
+        <label for="s-ff">Server ID</label>
+        <input id="s-ff" placeholder="លេខ Server ID">
+      </div>
+      
+      <div class="input-group">
+        <label for="r-ff">ABA Reference Number</label>
+        <input id="r-ff" placeholder="លេខយោង ABA">
+      </div>
+      
+      <button onclick="subFF()"><i class="fas fa-paper-plane"></i> បញ្ជាទិញឥឡូវ</button>
+    </section>
+    
+    <footer>
+      <div class="footer-links">
+        <a href="#" onclick="showPage('payment')">វិធីសាស្ត្រទូទាត់</a> | 
+        <a href="#" onclick="showPage('faq')">សំណួរដែលសួរញឹកញាប់</a> | 
+        <a href="#" onclick="showPage('about')">អំពីពួកយើង</a>
+      </div>
+      <p>© 2023 Kimchi Diamond. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    function showPage(page){
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.getElementById(page).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    
+    /* ML order */
+    let d,p;
+    function oML(di,pr){
+      d=di;
+      p=pr;
+      document.getElementById('f-ml').style.display='block';
+      document.getElementById('ml-diamonds').textContent = di;
+      document.getElementById('ml-price').textContent = pr.toFixed(2);
+      window.scrollTo({top:document.getElementById('f-ml').offsetTop,behavior:'smooth'});
+    }
+    
+    function subML(){
+      const g=document.getElementById('g-ml').value.trim(),
+            s=document.getElementById('s-ml').value.trim(),
+            r=document.getElementById('r-ml').value.trim();
+      if(!g||!s||!r){alert('សូមបំពេញព័ត៌មានឲ្យគ្រប់');return}
+      
+      // Show confirmation with more details
+      const confirmation = `💎 បញ្ជាទិញ Mobile Legends 💎\n\nGame ID: ${g}\nServer: ${s}\nកញ្ចប់ពេជ្រ: ${d} diamonds\nតម្លៃ: $${p}\nលេខយោង ABA: ${r}\n\nបញ្ជាទិញទទួលបាន! ពេជ្រនឹងត្រូវផ្គត់ផ្គង់ក្នុងរយៈពេល ៥-១៥ នាទី។`;
+      alert(confirmation);
+      
+      // Reset form
+      document.getElementById('g-ml').value = '';
+      document.getElementById('s-ml').value = '';
+      document.getElementById('r-ml').value = '';
+      document.getElementById('f-ml').style.display='none';
+    }
+    
+    /* FF order */
+    function oFF(di,pr){
+      d=di;
+      p=pr;
+      document.getElementById('f-ff').style.display='block';
+      document.getElementById('ff-diamonds').textContent = di;
+      document.getElementById('ff-price').textContent = pr.toFixed(2);
+      window.scrollTo({top:document.getElementById('f-ff').offsetTop,behavior:'smooth'});
+    }
+    
+    function subFF(){
+      const g=document.getElementById('g-ff').value.trim(),
+            s=document.getElementById('s-ff').value.trim(),
+            r=document.getElementById('r-ff').value.trim();
+      if(!g||!s||!r){alert('សូមបំពេញព័ត៌មានឲ្យគ្រប់');return}
+      
+      // Show confirmation with more details
+      const confirmation = `💎 បញ្ជាទិញ Free Fire 💎\n\nFree Fire ID: ${g}\nServer: ${s}\nពេជ្រ: ${d}\nតម្លៃ: $${p}\nលេខយោង ABA: ${r}\n\nបញ្ជាទិញទទួលបាន! ពេជ្រនឹងត្រូវផ្គត់ផ្គង់ក្នុងរយៈពេល ៥-១៥ នាទី។`;
+      alert(confirmation);
+      
+      // Reset form
+      document.getElementById('g-ff').value = '';
+      document.getElementById('s-ff').value = '';
+      document.getElementById('r-ff').value = '';
+      document.getElementById('f-ff').style.display='none';
+    }
+    
+    /* Image Upload Functions */
+    document.addEventListener('DOMContentLoaded', function() {
+      const dropArea = document.getElementById('drop-area');
+      const fileInput = document.getElementById('file-input');
+      const imagePreview = document.getElementById('image-preview');
+      
+      // Click to select file
+      dropArea.addEventListener('click', function() {
+        fileInput.click();
+      });
+      
+      // Handle file selection
+      fileInput.addEventListener('change', function(e) {
+        handleFiles(e.target.files);
+      });
+      
+      // Drag and drop functionality
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+      });
+      
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+      });
+      
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+      });
+      
+      function highlight() {
+        dropArea.style.backgroundColor = 'rgba(255,0,102,0.2)';
+      }
+      
+      function unhighlight() {
+        dropArea.style.backgroundColor = '';
+      }
+      
+      dropArea.addEventListener('drop', function(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+      });
+      
+      function handleFiles(files) {
+        if (files.length > 0) {
+          const file = files[0];
+          
+          // Check if file is an image
+          if (!file.type.match('image.*')) {
+            alert('សូមជ្រើសរើសឯកសាររូបភាពតែប៉ុណ្ណោះ (JPG, PNG, GIF)');
+            return;
+          }
+          
+          // Check file size (max 5MB)
+          if (file.size > 5 * 1024 * 1024) {
+            alert('ឯកសាររូបភាពត្រូវតែមានទំហំតូចជាង 5MB');
+            return;
+          }
+          
+          const reader = new FileReader();
+          
+          reader.onload = function(e) {
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block';
+          }
+          
+          reader.readAsDataURL(file);
+        }
+      }
+    });
+    
+    function uploadImage() {
+      const imagePreview = document.getElementById('image-preview');
+      const imageTitle = document.getElementById('image-title').value.trim();
+      const imageDescription = document.getElementById('image-description').value.trim();
+      
+      if (imagePreview.style.display !== 'block') {
+        alert('សូមជ្រើសរើសរូបភាពមុនពេលផ្ញើ');
+        return;
+      }
+      
+      if (!imageTitle) {
+        alert('សូមបញ្ចូលចំណងជើងរូបភាព');
+        return;
+      }
+      
+      // In a real application, you would send the image to a server here
+      // For this example, we'll just show a success message
+      
+      alert(`រូបភាពត្រូវបានផ្ញើដោយជោគជ័យ!\nចំណងជើង: ${imageTitle}\nការពិពណ៌នា: ${imageDescription || 'មិនមាន'}`);
+      
+      // Reset form
+      document.getElementById('image-title').value = '';
+      document.getElementById('image-description').value = '';
+      imagePreview.style.display = 'none';
+      imagePreview.src = '';
+    }
+  </script>
+</body>
+</html>
